@@ -1,0 +1,53 @@
+﻿@model SimpleWebSqlServerClient.Models.QueryModel
+@using System.Data
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@using (Html.BeginForm("Index", "Default", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.TextAreaFor(x => x.Query, new { @class = "form-control", @rows = 10 })
+        <input type="submit" value="Execute" class="btn btn-primary btn-block" />
+    </div>
+}
+@if (!string.IsNullOrEmpty(ViewBag.ErrMsg))
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrMsg
+    </div>
+}
+<hr />
+@{
+    DataSet ds = ViewBag.DataSet;
+    if (ds != null)
+    {
+        for (int z = 0; z < ds.Tables.Count; z++)
+        {
+            <h1>DataTable #@z</h1>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            @for (int i = 0; i < ds.Tables[z].Columns.Count; i++)
+                            {
+                                <th scope="col">@ds.Tables[z].Columns[i].ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int j = 0; j < ds.Tables[z].Rows.Count; j++)
+                        {
+                            <tr>
+                                @for (int i = 0; i < ds.Tables[z].Columns.Count; i++)
+                                {
+                                    <td>@ds.Tables[z].Rows[j].ItemArray[i]</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            <hr />
+        }
+    }
+}
